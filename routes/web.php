@@ -31,3 +31,19 @@ Route::get('ten/{ten?}/tuoi/{tuoi?}', function ($ten = 'Anonymous', $tuoi = 'Unk
     echo "Name: $ten, Age: $tuoi";
 });
 
+Route::get('scores', function () {
+    return view('scores.scores');
+});
+
+Route::get('scores_blade', function () {
+    return view('scores.scores_blade');
+});
+
+Route::get('layout_blade', function () {
+    return view('Layout.master');
+});
+
+Route::get('home', function () {
+    return view('template.home');
+});
+
