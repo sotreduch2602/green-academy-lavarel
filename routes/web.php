@@ -47,3 +47,18 @@ Route::get('home', function () {
     return view('template.home');
 });
 
+Route::get('client/layout_master', function () {
+    return view('client.layout.master');
+});
+
+Route::get('client/home', function () {
+    return view('client.pages.home');
+});
+
+Route::get('client/about', function () {
+    return view('client.pages.about');
+});
+
+Route::get('client', function () {
+    echo 'base';
+});

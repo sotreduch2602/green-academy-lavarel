@@ -20,6 +20,7 @@
                 sidebar right
                 {{-- @yield('sidebar-right') --}}
                 {{-- thêm vào --}}
+                @yield('sidebar-left2')
                 @section('sidebar-left')
                     <p>Default Sidebar right content goes here.</p>
                 @show
