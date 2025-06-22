@@ -31,10 +31,6 @@ Route::get('ten/{ten?}/tuoi/{tuoi?}', function ($ten = 'Anonymous', $tuoi = 'Unk
     echo "Name: $ten, Age: $tuoi";
 });
 
-Route::get('client/layout_master', function () {
-    return view('client.layout.master');
-});
-
 Route::get('client', function () {
     return view('client.pages.home');
 });
@@ -42,3 +38,8 @@ Route::get('client', function () {
 Route::get('client/about', function () {
     return view('client.pages.about');
 });
+
+Route::get('client/layout_master', function () {
+    return view('client.layout.master');
+});
+
