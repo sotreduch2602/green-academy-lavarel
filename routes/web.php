@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductCategoryController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,7 +33,7 @@ Route::get('ten/{ten?}/tuoi/{tuoi?}', function ($ten = 'Anonymous', $tuoi = 'Unk
     echo "Name: $ten, Age: $tuoi";
 });
 
-Route::get('client', function () {
+Route::get('client/home', function () {
     return view('client.pages.home');
 });
 
@@ -42,4 +44,23 @@ Route::get('client/about', function () {
 Route::get('client/layout_master', function () {
     return view('client.layout.master');
 });
+
+Route::get('admin/home', function () {
+    return view('admin.pages.home');
+});
+
+// Route::get('admin/product_category/create', function () {
+//     return view('admin.pages.product_category.create');
+// });
+
+Route::get('admin/product_category/list', function () {
+    return view('admin.pages.product_category.list');
+});
+
+Route::get('admin/product_category/create', [ProductCategoryController:: class, 'create'])->name('admin.product.category,create');
+
+Route::post('admin/product_category/store', [ProductCategoryController::class, 'store'])->name('admin.product_category.store');
+
+
+
 

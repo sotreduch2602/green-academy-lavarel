@@ -29,3 +29,9 @@
 </main>
 @endsection
 
+@section('my-script')
+    <script>
+        alert('This is the about page!');
+    </script>
+@endsection
+
