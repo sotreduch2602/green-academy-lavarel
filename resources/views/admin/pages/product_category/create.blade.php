@@ -63,11 +63,17 @@
 <script>
     $(document).ready(function(){
         $('#name').on('keyup', function(){
-            let name = $(this).val();
-            console.log(name);
+            let slug = $(this).val();
 
-            $('#slug').val(name.replaceAll(' ','-'));
-        })
+            $.ajax({
+                method: "GET",
+                url: "{{ route('admin.product_category.make_slug') }}",
+                data: {slug: slug},
+                success: function(response){
+                    $('#slug').val(response.slug);
+                }
+            })
+        });
     })
 </script>
 @endsection
