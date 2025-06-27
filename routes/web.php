@@ -55,7 +55,7 @@ Route::get('admin/home', function () {
 
 Route::get('admin/product_category/list', function () {
     return view('admin.pages.product_category.list');
-});
+})->name('admin.product.category.list');
 
 Route::get('admin/product_category/create', [ProductCategoryController:: class, 'create'])->name('admin.product.category,create');
 
