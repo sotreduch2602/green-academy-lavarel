@@ -22,6 +22,7 @@
                 <th>Slug</th>
                 <th>Status</th>
                 <th style="width: 100px">Created At</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -32,9 +33,18 @@
                         <td>
                             {{ $row -> slug }}
                         </td>
-
-                        <td><span class="badge bg-danger">{{ $row->status }}</span></td>
+                        <td>
+                            <span class="badge bg-danger">{{ $row->status ? 'Show' : 'Hide' }}</span>
+                        </td>
                         <td>{{ \Carbon\Carbon::parse($row->created_at)->format('m/d/Y H:i:s') }}</td>
+                        <td>
+                            <a class="btn btn-success" href="{{ route('admin.product_category.detail', ['id' => $row->id]) }}">Detail</a>
+                            <form action="{{ route('admin.product_category.destroy', [
+                            'id' => $row->id]) }}" method="post">
+                                @csrf
+                                <button class="btn btn-danger" onclick="return confirm('Are you sure')">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
 
@@ -44,15 +54,10 @@
         <!-- /.card-body -->
         <div class="card-footer clearfix">
         <ul class="pagination pagination-sm m-0 float-right">
-
             <li class="page-item"><a class="page-link" href="#">«</a></li>
-                <?php
-                    $page = 4;
-                    $itemPerPage =3;
-                ?>
-                @for ($i = 1 ; $i <= $page; $i++  )
+                @for ($page = 1 ; $page <= $totalPages; $page++)
                     <li class="page-item">
-                        <a class="page-link" href="#">{{ $i }}</a>
+                        <a class="page-link" href="?page={{ $page }}">{{ $page }}</a>
                     </li>
                 @endfor
             <li class="page-item"><a class="page-link" href="#">»</a></li>
