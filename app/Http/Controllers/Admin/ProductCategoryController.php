@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProductCategoryStoreRequest;
 use App\Http\Requests\Admin\ProductCategoryUpdateRequest;
+use App\Models\ProductCategoryTest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -12,17 +13,23 @@ use Illuminate\Support\Str;
 class ProductCategoryController extends Controller
 {
     public function list(Request $request ){
-        $result = DB::select('SELECT count(*) as count FROM product_category_test');
-        $totalItems = $result[0]->count;
-        $itemPerpage = 2;
-        $totalPages = (int)ceil($totalItems / $itemPerpage);
+        // $result = DB::select('SELECT count(*) as count FROM product_category_test');
+        // $totalItems = $result[0]->count;
+        // $itemPerpage = 2;
+        // $totalPages = (int)ceil($totalItems / $itemPerpage);
 
-        $page =$request->page ?? 1;
-        $offset = ($page - 1) * $itemPerpage;
+        // $page =$request->page ?? 1;
+        // $offset = ($page - 1) * $itemPerpage;
 
-        $datas = DB::select('SELECT * FROM product_category_test ORDER BY created_at DESC LIMIT ?,?', [$offset, $itemPerpage]);
+        // $datas = DB::select('SELECT * FROM product_category_test ORDER BY created_at DESC LIMIT ?,?', [$offset, $itemPerpage]);
 
-        return view('admin.pages.product_category.list', ['datas' => $datas, 'totalPages' => $totalPages]);
+        $itemPerpage = config('itemsperpage.items_per_page', 2);
+        // $datas = ProductCategoryTest::orderBy('created_at', "DESC")->paginate($itemPerpage);
+        $datas = DB::table('product_category_test')
+            ->orderBy('created_at', 'DESC')
+            ->paginate($itemPerpage);
+
+        return view('admin.pages.product_category.list', ['datas' => $datas]);
     }
 
     public function create(){
@@ -30,29 +37,36 @@ class ProductCategoryController extends Controller
     }
 
     public function store(ProductCategoryStoreRequest $request){
-        // $request->validate(
-        //     [
-        //         'name' => 'required|min:3|max:255',
-        //         'slug' => 'required|min:3|max:255',
-        //         'status' => 'required'
-        //         ],
-        //     [
-        //         'name.min' => 'Tên danh mục phải có ít nhất 3 ký tự',
-        //         'name.max' => 'Tên danh mục không được vượt quá 255 ký tự',
-        //         'name.required' => 'Tên danh mục không được để trống',
-        //         'slug.min' => 'Slug phải có ít nhất 3 ký tự',
-        //         'slug.max' => 'Slug không được vượt quá 255 ký tự',
-        //         'slug.required' => 'Slug không được để trống',
-        //         'status.required' => 'Trạng thái không được để trống'
-        //     ]
-        // );
-
-        //Fresh data
-
-        $check = DB::insert("INSERT INTO product_category_test(id, name,slug,status,created_at) VALUES (?,?,?,?,?)", [null,$request->name,$request->slug,$request->status,null]);
+        // $check = DB::insert("INSERT INTO product_category_test(id, name,slug,status,created_at) VALUES (?,?,?,?,?)", [null,$request->name,$request->slug,$request->status,null]);
         // dd($check);
+
+        //Query Builder
+        // $check = DB::table('product_category_test')->insert([
+        //     'name' => $request->name,
+        //     'slug' => $request->slug,
+        //     'status' => $request->status,
+        //     'created_at' => now(),
+        //     'updated_at' => now(),
+        // ]);
+
+        // Eloquent
+        // $productCategoryTest = new ProductCategoryTest();
+        // $productCategoryTest->status = $request->status;
+        // $productCategoryTest->name = $request->name;
+        // $productCategoryTest->slug = $request->slug;
+
+        // $check1 = $productCategoryTest->save();
+
+        $data = ProductCategoryTest::create([
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'status' => $request->status,
+        ]);
+
+        // dd($data);
+
         return redirect()->route('admin.product.category.list')
-        ->with('msg', $check ? 'success' :'failed');
+        ->with('msg', $data ? 'success' :'failed');
     }
 
     public function make_slug(Request $request){
@@ -67,10 +81,19 @@ class ProductCategoryController extends Controller
     }
 
     public function destroy(int $id){
-        $result = DB::delete('DELETE FROM product_category_test where id = ?', [$id]);
+        // $result = DB::delete('DELETE FROM product_category_test where id = ?', [$id]);
+
+        //Query Builder
+        // $result = DB::table('product_category_test')->where('id', $id)->delete();
+
+        //Eloquent
+        // $result = ProductCategoryTest::where('id',$id) -> delete();
+        $result = ProductCategoryTest::find($id) -> delete();
+
 
         $msg = $result ? 'success' : 'fail';
 
+        //flash message
         return redirect()->route('admin.product.category.list')->with('msg', $msg ? 'success' : 'failed');
     }
 
@@ -86,7 +109,30 @@ class ProductCategoryController extends Controller
 
     public function update(ProductCategoryUpdateRequest $request, string $id){
 
-        $check = DB::update('UPDATE product_category_test SET name = ?, slug = ?, status = ? WHERE id = ?', [$request->name, $request->slug, $request->status, $id]);
+        // $check = DB::update('UPDATE product_category_test SET name = ?, slug = ?, status = ? WHERE id = ?', [$request->name, $request->slug, $request->status, $id]);
+
+        //Query Builder
+        $check = DB::table('product_category_test')
+            ->where('id', $id)
+            ->update([
+                'name' => $request->name,
+                'slug' => $request->slug,
+                'status' => $request->status,
+            ]);
+
+        //Eloquent
+        // $productCategoryTest = ProductCategoryTest::find($id);
+        // $productCategoryTest->name = $request->name;
+        // $productCategoryTest->slug = $request->slug;
+        // $productCategoryTest->status = $request->status;
+        // $check = $productCategoryTest->save();
+
+        $check = ProductCategoryTest::find($id)->update([
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'status' => $request->status
+        ]);
+
 
         return redirect()->route('admin.product.category.list')->with('msg', $check ? 'success' : 'failed');
     }
