@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\CheckIsLogin;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 require_once __DIR__.'/client_routes.php';
@@ -36,3 +39,22 @@ Route::prefix('admin/product_category')
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('pepsi', function () {
+    return 'Hello Pepsi';
+})->name('pepsi');
+
+Route::get('coca', function () {
+    return 'Hello Coca';
+})->name('coca');
+
+Route::get('heliken', function () {
+    return 'Hello Heliken';
+})->middleware('check_age_18');
+
+Route::get('hennessy', function () {
+    return 'Hello Hennessy';
+})->name('hennessy');
+
+
+
