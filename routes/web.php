@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+Route::prefix('admin/product_category')
+->controller(ProductCategoryController::class)
+->name('admin.product_category.')
+->group(function(){
+    Route::get('list', 'list')->name('list');
+    Route::post('store', 'store')->name('store');
+    Route::get('create', 'create')->name('create');
+    Route::get('make_slug', 'makeSlug')->name('make_slug');
+    Route::post('destroy/{id}', 'destroy')->name('destroy');
+    Route::get('detail/{id}', 'detail')->name('detail');
+    Route::post('update/{id}', 'update')->name('update');
 });
 
 require __DIR__.'/auth.php';
