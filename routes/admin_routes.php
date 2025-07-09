@@ -1,14 +1,14 @@
 <?php
     use App\Http\Controllers\Admin\ProductCategoryController;
-    use Illuminate\Http\Request;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Middleware\CheckIsAdmin;
+use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Route;
 
 
-
-    Route::get('admin/home', function () {
+Route::get('admin/home', function () {
     return view('admin.pages.home');
-    });
-
+});
 // Route::get('admin/product_category/create', function () {
 //     return view('admin.pages.product_category.create');
 // });
@@ -27,16 +27,19 @@
 
 // Route::post('admin/product_category/update/{id}', [ProductCategoryController::class, 'update'])->name('admin.product_category.update');
 
-    Route::prefix('admin/product_category')
-            ->controller(ProductCategoryController::class)
-        ->name('admin.product_category.')
-        ->group(function () {
-            Route::get('list', 'list')->name('list');
-            Route::post('store', 'store')->name('store');
-            Route::get('create', 'create')->name('create');
-            Route::get('make_slug', 'makeSlug')->name('make_slug');
-            Route::post('destroy/{id}', 'destroy')->name('destroy');
-            Route::get('detail/{id}', 'detail')->name('detail');
-            Route::get('update/{id}', 'update')->name('update');
-        });
+Route::prefix('admin/product_category')
+->controller(ProductCategoryController::class)
+->name('admin.product_category.')
+->middleware(CheckIsAdmin::class)
+->group(function(){
+    Route::get('list', 'list')->name('list');
+    Route::post('store', 'store')->name('store');
+    Route::get('create', 'create')->name('create');
+    Route::get('make_slug', 'makeSlug')->name('make_slug');
+    Route::post('destroy/{productCategory}', 'destroy')->name('destroy');
+    Route::get('detail/{productCategory}', 'detail')->name('detail');
+    Route::post('update/{productCategory}', 'update')->name('update');
+});
+
+Route::resource('admin/product', ProductController::class)->names('admin.product')->middleware(CheckIsAdmin::class);
 

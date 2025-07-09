@@ -10,5 +10,8 @@ class ProductCategoryTest extends Model
     use HasFactory;
     protected $table = 'product_category_test';
     public $guarded = [];
-
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'product_category_id');
+    }
 }

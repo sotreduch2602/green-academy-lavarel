@@ -19,9 +19,13 @@
             <tr>
                 <th style="width: 10px">#</th>
                 <th>Name</th>
-                <th>Slug</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th style="width: 100px">Shipping</th>
+                <th>Weight</th>
                 <th>Status</th>
-                <th style="width: 100px">Created At</th>
+                <th>Product Category Name</th>
+                <th>Created At</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -31,16 +35,29 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $row -> name}}</td>
                         <td>
-                            {{ $row -> slug }}
+                            {{ $row -> price }}
                         </td>
                         <td>
-                            <span class="badge bg-danger">{{ $row->status ? 'Show' : 'Hide' }}</span>
+                            {{ $row -> quantity }}
+                        </td>
+                        <td>
+                            {{ $row -> shipping }}
+                        </td>
+                        <td>
+                            {{ $row -> weight }}
+                        </td>
+                        <td>
+                            <span class="badge {{ $row->status ? 'bg-success' : 'bg-danger' }}">
+                                {{ $row->status ? 'Show' : 'Hide' }}
+                            </span>
+                        </td>
+                        <td>
+                            {{ $row -> product_category_id }}
                         </td>
                         <td>{{ \Carbon\Carbon::parse($row->created_at)->format('m/d/Y H:i:s') }}</td>
                         <td>
                             <a class="btn btn-success" href="{{ route('admin.product_category.detail', ['productCategory' => $row->id]) }}">Detail</a>
-                            <form action="{{ route('admin.product_category.destroy', [
-                            'productCategory' => $row->id]) }}" method="post">
+                            <form action="" method="post">
                                 @csrf
                                 <button class="btn btn-danger" onclick="return confirm('Are you sure')">Delete</button>
                             </form>

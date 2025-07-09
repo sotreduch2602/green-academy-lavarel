@@ -80,59 +80,23 @@ class ProductCategoryController extends Controller
         return response()->json(['slug' => $slug]);
     }
 
-    public function destroy(int $id){
-        // $result = DB::delete('DELETE FROM product_category_test where id = ?', [$id]);
+    public function destroy(ProductCategoryTest $productCategory){
 
-        //Query Builder
-        // $result = DB::table('product_category_test')->where('id', $id)->delete();
-
-        //Eloquent
-        // $result = ProductCategoryTest::where('id',$id) -> delete();
-        $result = ProductCategoryTest::find($id) -> delete();
-
-
-        $msg = $result ? 'success' : 'fail';
+        $msg = $productCategory->delete() ? 'success' : 'failed';
 
         //flash message
         return redirect()->route('admin.product.category.list')->with('msg', $msg ? 'success' : 'failed');
     }
 
-    public function detail(string $id){
-        $data = DB::select('select * from product_category_test where id = ?', [$id]);
-
-        if (!count($data)){
-            abort(404);
-        }
-
-        return view('admin.pages.product_category.detail')->with('data', $data[0]);
+    public function detail(ProductCategoryTest $productCategory){
+        return view('admin.pages.product_category.detail')->with('data', $productCategory);
     }
 
-    public function update(ProductCategoryUpdateRequest $request, string $id){
-
-        // $check = DB::update('UPDATE product_category_test SET name = ?, slug = ?, status = ? WHERE id = ?', [$request->name, $request->slug, $request->status, $id]);
-
-        //Query Builder
-        $check = DB::table('product_category_test')
-            ->where('id', $id)
-            ->update([
-                'name' => $request->name,
-                'slug' => $request->slug,
-                'status' => $request->status,
-            ]);
-
-        //Eloquent
-        // $productCategoryTest = ProductCategoryTest::find($id);
-        // $productCategoryTest->name = $request->name;
-        // $productCategoryTest->slug = $request->slug;
-        // $productCategoryTest->status = $request->status;
-        // $check = $productCategoryTest->save();
-
-        $check = ProductCategoryTest::find($id)->update([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'status' => $request->status
-        ]);
-
+    public function update(ProductCategoryUpdateRequest $request, ProductCategoryTest $productCategory){
+        $productCategory->name = $request->name;
+        $productCategory->slug = $request->slug;
+        $productCategory->status = $request->status;
+        $check = $productCategory->save();
 
         return redirect()->route('admin.product.category.list')->with('msg', $check ? 'success' : 'failed');
     }

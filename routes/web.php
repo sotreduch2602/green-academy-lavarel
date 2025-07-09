@@ -22,19 +22,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-Route::prefix('admin/product_category')
-->controller(ProductCategoryController::class)
-->name('admin.product_category.')
-->middleware(CheckIsAdmin::class)
-->group(function(){
-    Route::get('list', 'list')->name('list');
-    Route::post('store', 'store')->name('store');
-    Route::get('create', 'create')->name('create');
-    Route::get('make_slug', 'makeSlug')->name('make_slug');
-    Route::post('destroy/{id}', 'destroy')->name('destroy');
-    Route::get('detail/{id}', 'detail')->name('detail');
-    Route::post('update/{id}', 'update')->name('update');
-});
-
 require __DIR__.'/auth.php';

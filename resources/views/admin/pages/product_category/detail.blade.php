@@ -9,7 +9,7 @@
     <!-- form start -->
     {{-- {{ dd($errors->all()) }} --}}
 
-    <form role="form" method="post" action="{{ route('admin.product_category.update',['id'=>$data->id]) }}">
+    <form role="form" method="post" action="{{ route('admin.product_category.update',['productCategory'=>$data->id]) }}">
         @csrf
         <div class="card-body">
             <div class="form-group">
