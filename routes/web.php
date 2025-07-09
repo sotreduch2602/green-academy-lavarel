@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\CheckIsAdmin;
 use Illuminate\Support\Facades\Route;
 
 require_once __DIR__.'/client_routes.php';
@@ -25,6 +26,7 @@ Route::middleware('auth')->group(function () {
 Route::prefix('admin/product_category')
 ->controller(ProductCategoryController::class)
 ->name('admin.product_category.')
+->middleware(CheckIsAdmin::class)
 ->group(function(){
     Route::get('list', 'list')->name('list');
     Route::post('store', 'store')->name('store');

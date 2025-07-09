@@ -34,7 +34,7 @@ use Illuminate\Http\Request;
     });
 
     Route::get('client/home', function () {
-        return view('client.pages.home');
+        return view('client.pages.home')->name('client.home');
     });
 
     Route::get('client/about', function () {
