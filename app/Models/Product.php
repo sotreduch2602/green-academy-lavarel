@@ -11,7 +11,7 @@ class Product extends Model
     protected $table = 'product';
     public $guarded = [];
 
-    public function category()
+    public function productCategory()
     {
         return $this->belongsTo(ProductCategoryTest::class, 'product_category_id');
     }

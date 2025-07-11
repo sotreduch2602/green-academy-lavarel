@@ -31,7 +31,7 @@ class ProductFactory extends Factory
             'shipping' => fake()->numberBetween(0, 50),
             'weight' => fake()->randomFloat(2, 0.1, 10),
             'description' => fake()->paragraph(),
-            'main_image' => fake()->imageUrl(),
+            'main_image' => $imageName,
             'status' => fake()->boolean(),
             'product_category_id' => fake()->randomElement($productCategoryIds),
         ];

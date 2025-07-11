@@ -3,7 +3,17 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Bordered Table</h3>
+            <h3 class="card-title">
+                <form method="get" action="{{ route('admin.product.index') }}">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                        <input type="text" name="search" class="form-control float-right" placeholder="Search"
+                                value="{{ request()->get('search') }}">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </h3>
             @if (session('msg'))
                 @if (session('msg') === 'success')
                     <div class="alert alert-success">Success</div>
@@ -19,6 +29,7 @@
             <tr>
                 <th style="width: 10px">#</th>
                 <th>Name</th>
+                <th>Image</th>
                 <th>Price</th>
                 <th>Quantity</th>
                 <th style="width: 100px">Shipping</th>
@@ -34,6 +45,9 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $row -> name}}</td>
+                        <td>
+                            <img class="w-75" src="{{ asset('images/'.$row->main_image )}}" alt="">
+                        </td>
                         <td>
                             {{ $row -> price }}
                         </td>
@@ -52,13 +66,14 @@
                             </span>
                         </td>
                         <td>
-                            {{ $row -> product_category_id }}
+                            {{ $row -> productCategory ? $row->productCategory->name : '' }}
                         </td>
                         <td>{{ \Carbon\Carbon::parse($row->created_at)->format('m/d/Y H:i:s') }}</td>
                         <td>
                             <a class="btn btn-success" href="{{ route('admin.product_category.detail', ['productCategory' => $row->id]) }}">Detail</a>
-                            <form action="" method="post">
+                            <form action="{{ route('admin.product.destroy', ['product' => $row]) }}" method="post">
                                 @csrf
+                                @method('DELETE')
                                 <button class="btn btn-danger" onclick="return confirm('Are you sure')">Delete</button>
                             </form>
                         </td>
@@ -80,7 +95,7 @@
             <li class="page-item"><a class="page-link" href="#">»</a></li>
         </ul> --}}
 
-            {{$datas->links()}}
+            {{$datas->withQueryString()->links()}}
         </div>
     </div>
 @endsection

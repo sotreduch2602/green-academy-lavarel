@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -14,13 +15,24 @@ class ProductController extends Controller
 
 
 
-    public function index()
+    public function index(Request $request)
     {
+        $keyword = $request->search ?? '';
+
         $itemPerpage = config('itemsperpage.items_per_page', 2);
 
-        $datas = Product::with('category')  // Eager load the category
-                ->orderBy('id', 'desc')
-                ->paginate($itemPerpage);
+        //QueryBuilder
+        // $datas = DB::table('products')
+        //     ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
+        //     ->select('products.*', 'categories.name as category_name')
+        //     ->orderBy('products.id', 'desc')
+        //     ->paginate($itemPerpage);
+
+        //Eloquent
+        $datas = Product::with('productCategory')  // Eager load the category
+        ->where('name', 'like', '%' . $keyword . '%')
+        ->orderBy('id', 'desc')
+        ->paginate($itemPerpage);
 
         return view('admin.pages.product.list', ['datas' => $datas]);
     }
@@ -74,8 +86,11 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
         //
+        $msg = $product->delete() ? 'success' : ' failed';
+
+        return redirect()->route('admin.product.index')->with('msg', $msg);
     }
 }

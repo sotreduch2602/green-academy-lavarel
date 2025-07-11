@@ -42,4 +42,3 @@ Route::prefix('admin/product_category')
 });
 
 Route::resource('admin/product', ProductController::class)->names('admin.product')->middleware(CheckIsAdmin::class);
-
