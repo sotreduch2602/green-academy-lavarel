@@ -12,6 +12,12 @@
                             <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
+                    
+                    <select name="sort" id="sort">
+                        <option value="">---Please Select</option>
+                        <option {{ request()->get('sort') === 'oldest' ? 'selected' : '' }} value="oldest">Oldest</option>
+                        <option {{ request()->get('sort') === 'latest' ? 'selected' : '' }} value="latest">Latest</option>
+                    </select>
                 </form>
             </h3>
             @if (session('msg'))

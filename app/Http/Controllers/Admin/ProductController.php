@@ -18,8 +18,16 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->search ?? '';
+        $sort =$request->sort ?? '';
 
         $itemPerpage = config('itemsperpage.items_per_page', 2);
+
+        $array = ['id', 'desc'];
+        if ($sort ==='oldest') {
+            $array = ['id', 'asc'];
+        }
+
+        [$column, $sort] = $array;
 
         //QueryBuilder
         // $datas = DB::table('products')

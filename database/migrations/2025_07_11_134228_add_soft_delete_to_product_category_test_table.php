@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_image', function (Blueprint $table) {
-            $table->id();
-            $table->string('image');
-            $table->unsignedBigInteger('product_id');
-            $table->foreign('product_id')->references('id')->on('product');
-            $table->timestamps();
+        Schema::table('product_category_test', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_image');
+        Schema::table('product_category_test', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 };

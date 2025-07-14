@@ -22,13 +22,26 @@ class ProductCategoryController extends Controller
         // $offset = ($page - 1) * $itemPerpage;
 
         // $datas = DB::select('SELECT * FROM product_category_test ORDER BY created_at DESC LIMIT ?,?', [$offset, $itemPerpage]);
+        $keyword = $request->search ?? '';
+        $sort =$request->sort ?? '';
+
+        $array = ['id', 'desc'];
+        if ($sort ==='oldest') {
+            $array = ['id', 'asc'];
+        }
+
+        [$column, $sort] = $array;
 
         $itemPerpage = config('itemsperpage.items_per_page', 2);
-        // $datas = ProductCategoryTest::orderBy('created_at', "DESC")->paginate($itemPerpage);
-        $datas = DB::table('product_category_test')
-            ->orderBy('created_at', 'DESC')
-            ->paginate($itemPerpage);
+        // $datas = DB::table('product_category_test')
+        // ->orderBy($column, $sort)
+        // ->where('name', 'like', '%' . $keyword . '%')
+        // ->paginate($itemPerpage);
 
+        $datas = ProductCategoryTest::withTrashed()
+        ->where('name', 'like', '%' . $keyword . '%')
+        ->orderBy($column, $sort)
+        ->paginate($itemPerpage);
         return view('admin.pages.product_category.list', ['datas' => $datas]);
     }
 
@@ -85,7 +98,7 @@ class ProductCategoryController extends Controller
         $msg = $productCategory->delete() ? 'success' : 'failed';
 
         //flash message
-        return redirect()->route('admin.product.category.list')->with('msg', $msg ? 'success' : 'failed');
+        return redirect()->route('admin.product_category.list')->with('msg', $msg ? 'success' : 'failed');
     }
 
     public function detail(ProductCategoryTest $productCategory){
@@ -98,6 +111,13 @@ class ProductCategoryController extends Controller
         $productCategory->status = $request->status;
         $check = $productCategory->save();
 
-        return redirect()->route('admin.product.category.list')->with('msg', $check ? 'success' : 'failed');
+        return redirect()->route('admin.product_category.list')->with('msg', $check ? 'success' : 'failed');
+    }
+
+    public function restore(string $id){
+        $productCategory = ProductCategoryTest::withTrashed()->findOrFail($id);
+        $check = $productCategory->restore();
+
+        return redirect()->route('admin.product_category.list')->with('msg', $check ? 'success' : 'failed');
     }
 }

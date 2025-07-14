@@ -3,7 +3,23 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Bordered Table</h3>
+            <h3 class="card-title">
+                <form method="get" action="{{ route('admin.product_category.list') }}">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                        <input type="text" name="search" class="form-control float-right" placeholder="Search"
+                                value="{{ request()->get('search') }}">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+
+                    <select name="sort" id="sort">
+                        <option value="">---Please Select</option>
+                        <option {{ request()->get('sort') === 'oldest' ? 'selected' : '' }} value="oldest">Oldest</option>
+                        <option {{ request()->get('sort') === 'latest' ? 'selected' : '' }} value="latest">Latest</option>
+                    </select>
+                </form>
+            </h3>
             @if (session('msg'))
                 @if (session('msg') === 'success')
                     <div class="alert alert-success">Success</div>
@@ -44,6 +60,13 @@
                                 @csrf
                                 <button class="btn btn-danger" onclick="return confirm('Are you sure')">Delete</button>
                             </form>
+
+                            @if (!is_null($row->deleted_at))
+                                <form action="{{ route('admin.product_category.restore', ['id' => $row->id]) }}" method="post">
+                                    @csrf
+                                    <button class="btn btn-warning" onclick="return confirm('Are you sure to restore?')">Restore</button>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
