@@ -10,9 +10,9 @@ class CartController extends Controller
 {
     public function index(){
         $cart = session()->get('cart');
-        dd($cart);
+        // dd($cart);
+        return view('client.pages.cart', ['cart' => $cart]);
     }
-
 
     public function addProductToCart(Product $product){
         $cart = session()->get('cart', []);
@@ -25,7 +25,6 @@ class CartController extends Controller
         ];
 
         session()->put('cart', $cart);
-
         return response()->json(['message' => 'Add product to cart successfully']);
     }
 }

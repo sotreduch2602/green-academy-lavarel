@@ -267,6 +267,8 @@
 
     @yield('content')
 
+    @yield('shopping-cart')
+
     <!-- Footer Section Begin -->
     <footer class="footer spad">
         <div class="container">
