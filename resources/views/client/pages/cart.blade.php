@@ -36,6 +36,8 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{-- {{ dd($cart) }} --}}
+                            @php $totalPrice = 0 @endphp
                             @foreach ($cart as $item)
                                 <tr>
                                     <td class="shoping__cart__item">
@@ -53,8 +55,11 @@
                                         </div>
                                     </td>
                                     <td class="shoping__cart__total">
-                                        @php $total = $item['qty'] * $item['price'] @endphp
-                                        ${{ number_format($total, 2) }}
+                                        @php
+                                            $total = $item['qty'] * $item['price'];
+                                            $totalPrice += $total;
+                                        @endphp
+                                        ${{ number_format( $total, 2) }}
                                     </td>
                                     <td class="shoping__cart__item__close">
                                         <span class="icon_close"></span>
@@ -89,10 +94,10 @@
                 <div class="shoping__checkout">
                     <h5>Cart Total</h5>
                     <ul>
-                        <li>Subtotal <span>$454.98</span></li>
-                        <li>Total <span>$454.98</span></li>
+                        <li>Subtotal <span>{{ $totalPrice }}</span></li>
+                        <li>Total <span>{{ $totalPrice }}</span></li>
                     </ul>
-                    <a href="#" class="primary-btn">PROCEED TO CHECKOUT</a>
+                    <a href="{{ route('checkout') }}" class="primary-btn">PROCEED TO CHECKOUT</a>
                 </div>
             </div>
         </div>
