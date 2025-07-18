@@ -4,6 +4,7 @@ use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\GoogleController;
 use App\Http\Controllers\Client\HomeController;
 use App\Mail\TestEmailTemplate;
+use App\Models\Product;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,7 @@ Route::get('google/callback', [GoogleController::class, 'callback'])->name('clie
 
 
 //Send Mail
-Route::get('test-mail', function(){
-    Mail::to('sotreduch26022001@gmail.com')->send(new TestEmailTemplate());
+Route::get('test-mail', function () {
+    $product = Product::find(21);
+    Mail::to('sotreduch26022001@gmail.com')->send(new TestEmailTemplate($product));
 });

@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Product;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,12 +14,14 @@ class TestEmailTemplate extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public Product $product;
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(Product $product)
     {
         //
+        $this->product = $product;
     }
 
     /**
@@ -38,6 +41,7 @@ class TestEmailTemplate extends Mailable
     {
         return new Content(
             view: 'testmail',
+            with: ['product' => $this->product]
         );
     }
 
